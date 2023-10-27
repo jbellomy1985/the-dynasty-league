@@ -1,4 +1,6 @@
 import React, {useCallback, useState} from 'react';
+
+// Material UI
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import AppBar from '@mui/material/AppBar';
 import Avatar from '@mui/material/Avatar';
@@ -11,9 +13,17 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 
 // Styles
+import './Header.scss';
 import logo from '../logo.svg';
 
-function Header() {
+// Web-Api
+import {League} from '../web-api';
+
+export type THeader = {
+  league?: League | null;
+}
+
+function Header({league = null}: THeader) {
   const [loggedIn, setLoggedIn] = useState<boolean>(true); // TODO: Add a true login method that will hit an API and log in
   const [anchorElementUser, setAnchorElementUser] = useState<null | HTMLElement>(null);
 
@@ -35,15 +45,20 @@ function Header() {
     setLoggedIn(false);
   }, [handleCloseUserMenu]);
 
-  // TODO: Add the league Avatar using the Sleeper Avatar API
+  const leagueName = league?.getName();
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Sleepr Dynasty
+          <Typography variant="h3" component="div" sx={{ marginLeft: "8px" }}>
+            {leagueName}
           </Typography>
+          <Box sx={{ flexGrow: 1, display: { xs: 'flex' }, marginLeft: "64px", justifyContent: "space-around"}}>
+            <Typography variant="h4" noWrap>Season: <span className="Header">{league?.getSeason()}</span></Typography>
+            <Typography variant="h4" sx={{marginLeft: "32px"}} noWrap>Status: <span className="Header">{league?.getStatus()}</span></Typography>
+            <Typography variant="h4" sx={{marginLeft: "32px"}} noWrap>Teams: <span className="Header">{league?.getNumberOfTeams()}</span></Typography>
+          </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>

@@ -1,6 +1,7 @@
 import API from "../API";
+import {fromJS} from "immutable";
 
-class Leagues extends API {
+class LeaguesAPI extends API {
     url = "https://api.sleeper.app/v1/league"
     constructor() {
         super();
@@ -11,4 +12,4 @@ class Leagues extends API {
     }
 }
 
-export default new Leagues();
+export default new LeaguesAPI();

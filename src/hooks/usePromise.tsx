@@ -9,7 +9,7 @@ export default function usePromise(promise: Function, deps: Array<any>): TApiRes
     const [retry, setRetry] = useState<any | null>(null);
 
     const retryPromise = useCallback(() => {
-        setRetry(Symbol("usePromise Retry Promise"))
+        setRetry(Symbol("usePromise Retry Promise"));
     }, []);
 
     const getApiData = async () => {

@@ -1,5 +1,8 @@
-import Leagues from "./leagues/client"
+// League
+import League from "./leagues/League";
+import LeaguesAPI from "./leagues/LeaguesAPI";
 
 export {
-    Leagues
+    League,
+    LeaguesAPI
 };
