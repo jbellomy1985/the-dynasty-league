@@ -1,9 +1,7 @@
 import React from 'react';
 
 // Material UI
-import Alert from '@mui/material/Alert';
-import Button from '@mui/material/Button';
-import CircularProgress from '@mui/material/CircularProgress';
+import { Alert, Button, CircularProgress} from '@mui/material';
 
 // Styles
 import './App.scss';
@@ -14,6 +12,9 @@ import '@fontsource/roboto/700.css';
 
 // Components
 import Header from './components/Header';
+import Main from './components/Main';
+
+// Hooks & Web-Api
 import usePromise, {TApiResponse} from "./hooks/usePromise";
 import {League, LeaguesAPI} from './web-api';
 
@@ -50,7 +51,7 @@ function App() {
         }
         {
           !isLoading && !error &&
-          <p>Display Component here</p>
+          <Main />
         }
       </div>
     </div>
