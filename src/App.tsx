@@ -1,24 +1,61 @@
 import React from 'react';
 
+// Material UI
+import { Alert, Button, CircularProgress} from '@mui/material';
+
 // Styles
-import logo from './logo.svg';
-import './App.css';
+import './App.scss';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
+// Components
+import Header from './components/Header';
+import Main from './components/Main';
+
+// Hooks & Web-Api
+import usePromise, {TApiResponse} from "./hooks/usePromise";
+import {League, LeaguesAPI} from './web-api';
+
+function useSleeperLeague(leagueId: string) {
+  return usePromise(() => {
+    if(!leagueId) return Promise.resolve(null);
+
+    return LeaguesAPI.getById(leagueId);
+  }, [leagueId]);
+}
+
 function App() {
+  const [sleeperLeague, isLoading, error, retry]: TApiResponse = useSleeperLeague("995785140678815744");
+  const league = new League(sleeperLeague);
+
+  // TODO: Build an error page for a better look and feel
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Under Construction
-        </p>
-      </header>
+      <Header league={league} />
+      <div className={isLoading ? "App__loading" : ""}>
+        {
+          isLoading &&
+          <CircularProgress size="16rem" />
+        }
+        {
+          error &&
+          <Alert
+            severity="error"
+            action={
+              <Button color="inherit" size="small" onClick={retry}>
+                Retry
+              </Button>
+            }>{error.message}</Alert>
+        }
+        {
+          !isLoading && !error &&
+          <Main />
+        }
+      </div>
     </div>
   );
 }
 
-export default App;
+export default React.memo(App);
