@@ -2,11 +2,8 @@ import React, {useCallback, useState} from 'react';
 
 // Material UI
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import {default as AppBarMaterial} from '@mui/material/AppBar';
-import Avatar from '@mui/material/Avatar';
+import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
@@ -23,22 +20,13 @@ export type THeader = {
   league?: League | null;
 }
 
-function AppBar({league = null}: THeader) {
-  const [anchorElementUser, setAnchorElementUser] = useState<null | HTMLElement>(null);
-
-  const handleOpenUserMenu = useCallback((event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElementUser(event.currentTarget);
-  }, []);
-
-  const handleCloseUserMenu = useCallback(() => {
-    setAnchorElementUser(null);
-  }, []);
-
+function Header({league = null}: THeader) {
+  
   const leagueName = league?.getName();
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBarMaterial position="static">
+      <AppBar position="static">
         <Toolbar>
           <Typography variant="h3" component="div" sx={{ marginLeft: "8px" }}>
             {leagueName}
@@ -56,9 +44,9 @@ function AppBar({league = null}: THeader) {
             </Tooltip>
           </Box>
         </Toolbar>
-      </AppBarMaterial>
+      </AppBar>
     </Box>
   );
 }
 
-export default React.memo(AppBar);
+export default React.memo(Header);
