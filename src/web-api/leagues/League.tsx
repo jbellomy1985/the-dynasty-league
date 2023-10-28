@@ -5,13 +5,12 @@ enum Status {
 };
 
 export default class League {
-    _leagueId: string;
+    static ID: string = "995785140678815744";
     _name: string;
     _season: number;
     _status: string;
     _teams: number;
     constructor(data: Map<string, any>) {
-        this._leagueId = data?.get("leagueId");
         this._name = data?.get("name");
         this._season = data?.get("season");
         this._status = data?.get("status");

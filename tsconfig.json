@@ -21,6 +21,12 @@
     "jsx": "react-jsx",
     "experimentalDecorators": true
   },
+  "import/no-anonymous-default-export": ["error", {
+    "allowAnonymousClass": true,
+    "allowAnonymousFunction": true,
+    "allowNew": true,
+    "allowObject": true
+  }],
   "include": [
     "src"
   ]

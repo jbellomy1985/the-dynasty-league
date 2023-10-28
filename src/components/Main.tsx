@@ -1,7 +1,17 @@
-import React, { useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 
 // Material UI
-import { Box, Divider, Drawer, Grid, List, ListItem, ListItemButton, ListItemIcon, Typography } from '@mui/material';
+import {
+    Box,
+    Divider,
+    Drawer,
+    Grid,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemIcon,
+    Typography
+} from '@mui/material';
 import GroupsIcon from '@mui/icons-material/Groups';
 import CompareArrowsOutlinedIcon from '@mui/icons-material/CompareArrowsOutlined';
 import PersonSearchOutlinedIcon from '@mui/icons-material/PersonSearchOutlined';
@@ -16,7 +26,28 @@ import Payouts from './features/Payouts';
 import CompareTeams from './features/CompareTeams';
 import History from './features/History';
 
+// Hooks & Web-Api
+import usePromise, {TApiResponse} from "../hooks/usePromise";
+import { League, RostersAPI, UsersAPI } from '../web-api';
+
+function useLeagueUsers(leagueId: string) {
+    return usePromise(() => {
+      if(!leagueId) return Promise.resolve(null);
+  
+      return UsersAPI.getByLeagueId(leagueId);
+    }, [leagueId]);
+}
+
+function useRosters(leagueId: string) {
+    return usePromise(() => {
+      if(!leagueId) return Promise.resolve(null);
+  
+      return RostersAPI.getByLeagueId(leagueId);
+    }, [leagueId]);
+}
+
 const drawerWidth: number = 300;
+const headerHeight: number = 64;
 
 enum Navigation {
     NONE,
@@ -27,11 +58,18 @@ enum Navigation {
     HISTORY
 };
 
-function Main() {
+type TMain = {
+    leagueError?: ReactElement<any, any> | null;
+}
+
+function Main({ leagueError = null }: TMain) {
   const [navigation, setNavigation] = useState<Navigation>(Navigation.NONE);
 
+  const [users, isLoadingUsers, usersError, retryUsers]: TApiResponse = useLeagueUsers(League.ID);
+  const [rosters, isLoadingRosters, rostersError, retryRosters]: TApiResponse = useRosters(League.ID);
+
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', marginTop: `${headerHeight}px` }}>
         <Box
             component="nav"
             sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
@@ -40,13 +78,12 @@ function Main() {
             <Drawer
                 variant="permanent"
                 sx={{
-                    marginTop: 64,
                     display: 'block',
                     '& .MuiDrawer-paper': {
-                        top: 64,
+                        top: headerHeight,
                         boxSizing: 'border-box',
                         width: drawerWidth,
-                        height: "calc(100% - 64px)",
+                        height: `calc(100% - ${headerHeight}px)`,
                         backgroundColor: "#e6e6e6",
                     },
                 }}
@@ -104,7 +141,10 @@ function Main() {
         >
             {
                 navigation === Navigation.NONE &&
-                <div>Main Content</div>
+                <>
+                    {leagueError}
+                    Main Content goes here
+                </>
             }
             {
                 navigation === Navigation.TEAM &&
@@ -112,7 +152,7 @@ function Main() {
             }
             {
                 navigation === Navigation.COMPARE &&
-                <CompareTeams />
+                <CompareTeams users={users} rosters={rosters} />
             }
             {
                 navigation === Navigation.PLAYERS &&
@@ -120,7 +160,7 @@ function Main() {
             }
             {
                 navigation === Navigation.PAYOUTS &&
-                <Payouts />
+                <Payouts users={users} rosters={rosters} />
             }
             {
                 navigation === Navigation.HISTORY &&

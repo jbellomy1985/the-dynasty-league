@@ -1,7 +1,7 @@
 import React from 'react';
 
 // Material UI
-import { Alert, Button, CircularProgress} from '@mui/material';
+import { Alert, AlertTitle, Button} from '@mui/material';
 
 // Styles
 import './App.scss';
@@ -27,33 +27,27 @@ function useSleeperLeague(leagueId: string) {
 }
 
 function App() {
-  const [sleeperLeague, isLoading, error, retry]: TApiResponse = useSleeperLeague("995785140678815744");
+  const [sleeperLeague, isLoading, error, retry]: TApiResponse = useSleeperLeague(League.ID);
   const league = new League(sleeperLeague);
 
-  // TODO: Build an error page for a better look and feel
   return (
     <div className="App">
-      <Header league={league} />
-      <div className={isLoading ? "App__loading" : ""}>
-        {
-          isLoading &&
-          <CircularProgress size="16rem" />
-        }
-        {
-          error &&
+      <Header league={league} isLoading={isLoading} />
+      <Main
+        leagueError={error &&
           <Alert
             severity="error"
             action={
               <Button color="inherit" size="small" onClick={retry}>
                 Retry
               </Button>
-            }>{error.message}</Alert>
+            }
+          >
+            <AlertTitle>We encourted an issue while loading the League</AlertTitle>
+            {error.message}
+          </Alert>
         }
-        {
-          !isLoading && !error &&
-          <Main />
-        }
-      </div>
+      />
     </div>
   );
 }

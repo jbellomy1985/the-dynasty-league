@@ -5,6 +5,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
+import Skeleton from '@mui/material/Skeleton';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
@@ -17,23 +18,27 @@ import {League} from '../web-api';
 
 export type THeader = {
   league?: League | null;
+  isLoading?: boolean;
 }
 
-function Header({league = null}: THeader) {
-  
-  const leagueName = league?.getName();
-
+function Header({league = null, isLoading = false}: THeader) {
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar>
           <Typography variant="h3" component="div" sx={{ marginLeft: "8px" }}>
-            {leagueName}
+            {isLoading ? <Skeleton variant="text" sx={{ width: "262px"}} /> : league?.getName()}
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'flex' }, marginLeft: "64px", justifyContent: "space-around"}}>
-            <Typography variant="h4" noWrap>Season: <span className="Header">{league?.getSeason()}</span></Typography>
-            <Typography variant="h4" sx={{marginLeft: "32px"}} noWrap>Status: <span className="Header">{league?.getStatus()}</span></Typography>
-            <Typography variant="h4" sx={{marginLeft: "32px"}} noWrap>Teams: <span className="Header">{league?.getNumberOfTeams()}</span></Typography>
+            <Typography variant="h4" noWrap>
+              Season: <span className="Header">{isLoading ? <Skeleton variant="text" sx={{ width: "79px"}} /> : league?.getSeason()}</span>
+            </Typography>
+            <Typography variant="h4" sx={{marginLeft: "32px"}} noWrap>
+              Status: <span className="Header">{isLoading ? <Skeleton variant="text" sx={{ width: "155px"}} /> : league?.getStatus()}</span>
+            </Typography>
+            <Typography variant="h4" sx={{marginLeft: "32px"}} noWrap>
+              Teams: <span className="Header">{isLoading ? <Skeleton variant="text" sx={{ width: "39px"}} /> : league?.getNumberOfTeams()}</span>
+            </Typography>
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="User Name">
