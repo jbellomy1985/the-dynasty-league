@@ -34,7 +34,7 @@ function App() {
   return (
     <div className="App">
       <Header league={league} />
-      <div className={isLoading ? "App__loading" : "App__body"}>
+      <div className={isLoading ? "App__loading" : ""}>
         {
           isLoading &&
           <CircularProgress size="16rem" />

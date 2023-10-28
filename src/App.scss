@@ -2,10 +2,6 @@
   display: flex;
   flex-direction: column;
 
-  &__body {
-    padding: 24px;
-  }
-
   &__loading {
     display: flex;
     min-height: calc(100vh - 64px);

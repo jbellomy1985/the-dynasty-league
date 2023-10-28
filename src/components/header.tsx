@@ -24,7 +24,6 @@ export type THeader = {
 }
 
 function Header({league = null}: THeader) {
-  const [loggedIn, setLoggedIn] = useState<boolean>(true); // TODO: Add a true login method that will hit an API and log in
   const [anchorElementUser, setAnchorElementUser] = useState<null | HTMLElement>(null);
 
   const handleOpenUserMenu = useCallback((event: React.MouseEvent<HTMLElement>) => {
@@ -34,16 +33,6 @@ function Header({league = null}: THeader) {
   const handleCloseUserMenu = useCallback(() => {
     setAnchorElementUser(null);
   }, []);
-
-  const handleLogIn = useCallback(() => {
-    handleCloseUserMenu();
-    setLoggedIn(true);
-  }, [handleCloseUserMenu]);
-
-  const handleLogOut = useCallback(() => {
-    handleCloseUserMenu();
-    setLoggedIn(false);
-  }, [handleCloseUserMenu]);
 
   const leagueName = league?.getName();
 
@@ -60,45 +49,11 @@ function Header({league = null}: THeader) {
             <Typography variant="h4" sx={{marginLeft: "32px"}} noWrap>Teams: <span className="Header">{league?.getNumberOfTeams()}</span></Typography>
           </Box>
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                {
-                  loggedIn && <Avatar alt="Remy Sharp" src={logo} />
-                }
-                {
-                  !loggedIn && <AccountCircle fontSize="large" />
-                }
+            <Tooltip title="User Name">
+              <IconButton sx={{ p: 0 }}>
+                <AccountCircle fontSize="large" />
               </IconButton>
             </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElementUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElementUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {
-                loggedIn &&
-                <MenuItem onClick={handleLogOut}>
-                  <Typography textAlign="center">Log Out</Typography>
-                </MenuItem>
-              }
-              {
-                !loggedIn &&
-                <MenuItem onClick={handleLogIn}>
-                  <Typography textAlign="center">Sign In</Typography>
-                </MenuItem>
-              }
-            </Menu>
           </Box>
         </Toolbar>
       </AppBar>
