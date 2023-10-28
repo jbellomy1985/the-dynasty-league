@@ -1,7 +1,9 @@
 import React from "react";
 
-export default function MyTeam() {
+function MyTeam() {
     return (
         <div>My Team Info</div>
     );
 };
+
+export default React.memo(MyTeam);

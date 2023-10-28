@@ -6,6 +6,7 @@ enum Status {
 
 export default class League {
     static ID: string = "995785140678815744";
+    static SPORT: string = "nfl";
     _name: string;
     _season: number;
     _status: string;

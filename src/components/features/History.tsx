@@ -1,7 +1,9 @@
 import React from "react";
 
-export default function History() {
+function History() {
     return (
         <div>League History</div>
     );
 };
+
+export default React.memo(History);

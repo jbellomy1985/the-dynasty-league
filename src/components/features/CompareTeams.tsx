@@ -6,7 +6,7 @@ type TCompareTeams = {
     rosters?: List<Map<string, any>> | null;
 }
 
-export default function CompareTeams({
+function CompareTeams({
     users = null,
     rosters = null
 }: TCompareTeams) {
@@ -14,3 +14,5 @@ export default function CompareTeams({
         <div>Teams Comparison Info</div>
     );
 };
+
+export default React.memo(CompareTeams);

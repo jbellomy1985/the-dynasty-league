@@ -28,7 +28,7 @@ import History from './features/History';
 
 // Hooks & Web-Api
 import usePromise, {TApiResponse} from "../hooks/usePromise";
-import { League, RostersAPI, UsersAPI } from '../web-api';
+import { League, NFLState, NFLStateAPI, RostersAPI, UsersAPI } from '../web-api';
 
 function useLeagueUsers(leagueId: string) {
     return usePromise(() => {
@@ -44,6 +44,14 @@ function useRosters(leagueId: string) {
   
       return RostersAPI.getByLeagueId(leagueId);
     }, [leagueId]);
+}
+
+function useNFLState(sport: string = "nfl") {
+    return usePromise(() => {
+      if(!sport) return Promise.resolve(null);
+  
+      return NFLStateAPI.getBySport(sport);
+    }, [sport]);
 }
 
 const drawerWidth: number = 300;
@@ -67,6 +75,8 @@ function Main({ leagueError = null }: TMain) {
 
   const [users, isLoadingUsers, usersError, retryUsers]: TApiResponse = useLeagueUsers(League.ID);
   const [rosters, isLoadingRosters, rostersError, retryRosters]: TApiResponse = useRosters(League.ID);
+  const [nflStateResponse, isLoadingNFLState, nflStateError, retryNFLState]: TApiResponse = useNFLState(League.SPORT);
+  const nflState = new NFLState(nflStateResponse);
 
   return (
     <Box sx={{ display: 'flex', marginTop: `${headerHeight}px` }}>
@@ -160,7 +170,7 @@ function Main({ leagueError = null }: TMain) {
             }
             {
                 navigation === Navigation.PAYOUTS &&
-                <Payouts users={users} rosters={rosters} />
+                <Payouts users={users} rosters={rosters} nflState={nflState} />
             }
             {
                 navigation === Navigation.HISTORY &&

@@ -1,7 +1,9 @@
 import React from "react";
 
-export default function Players() {
+function Players() {
     return (
         <div>Player Info</div>
     );
 };
+
+export default React.memo(Players);
