@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React from 'react';
 
 // Material UI
 import AccountCircle from '@mui/icons-material/AccountCircle';
@@ -11,7 +11,6 @@ import Typography from '@mui/material/Typography';
 
 // Styles
 import './Header.scss';
-import logo from '../logo.svg';
 
 // Web-Api
 import {League} from '../web-api';
