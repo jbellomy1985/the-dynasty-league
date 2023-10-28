@@ -2,7 +2,7 @@ import React, {useCallback, useState} from 'react';
 
 // Material UI
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import AppBar from '@mui/material/AppBar';
+import {default as AppBarMaterial} from '@mui/material/AppBar';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Menu from '@mui/material/Menu';
@@ -23,7 +23,7 @@ export type THeader = {
   league?: League | null;
 }
 
-function Header({league = null}: THeader) {
+function AppBar({league = null}: THeader) {
   const [anchorElementUser, setAnchorElementUser] = useState<null | HTMLElement>(null);
 
   const handleOpenUserMenu = useCallback((event: React.MouseEvent<HTMLElement>) => {
@@ -38,7 +38,7 @@ function Header({league = null}: THeader) {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBarMaterial position="static">
         <Toolbar>
           <Typography variant="h3" component="div" sx={{ marginLeft: "8px" }}>
             {leagueName}
@@ -56,9 +56,9 @@ function Header({league = null}: THeader) {
             </Tooltip>
           </Box>
         </Toolbar>
-      </AppBar>
+      </AppBarMaterial>
     </Box>
   );
 }
 
-export default React.memo(Header);
+export default React.memo(AppBar);

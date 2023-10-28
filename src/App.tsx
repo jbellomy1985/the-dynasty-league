@@ -11,7 +11,7 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
 // Components
-import Header from './components/Header';
+import Header from './components/AppBar';
 import Main from './components/Main';
 
 // Hooks & Web-Api
