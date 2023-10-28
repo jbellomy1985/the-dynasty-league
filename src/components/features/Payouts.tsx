@@ -1,16 +1,27 @@
 import React, { useMemo } from "react";
-import { List, Map } from "immutable";
+import { List as ImmutableList, Map } from "immutable";
+
+// Material UI
+import {
+    List,
+    ListItem,
+    ListItemText,
+    Typography
+} from '@mui/material';
 
 import { NFLState, Roster, User } from "../../web-api";
 
-
 type TPayouts = {
-    users?: List<Map<string, any>> | null;
-    rosters?: List<Map<string, any>> | null;
+    users?: ImmutableList<Map<string, any>> | null;
+    rosters?: ImmutableList<Map<string, any>> | null;
     nflState?: NFLState | null;
 }
 
-function buildPayoutMap(users: TPayouts["users"], rosters: TPayouts["rosters"], nflState: TPayouts["nflState"]) {
+function buildPayoutMap(
+    users: TPayouts["users"],
+    rosters: TPayouts["rosters"],
+    nflState: TPayouts["nflState"]
+): Map<string, any> {
     const payoutMap: Map<string, any> = Map<string, any>();
 
     return payoutMap;
@@ -25,7 +36,19 @@ function Payouts({
     const payoutMap: Map<string, any> = useMemo(() => buildPayoutMap(users, rosters, nflState), [users, rosters, nflState]);
 
     return (
-        <div>Payout Info</div>
+        <>
+            <Typography variant="h3" component="div">
+                Items to be added
+            </Typography>
+            <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                <ListItem>
+                    <ListItemText primary="Highest scorer payout" />
+                </ListItem>
+                <ListItem>
+                    <ListItemText primary="Projected Payout (based on current Standings)" />
+                </ListItem>
+            </List>
+        </>
     );
 };
 
