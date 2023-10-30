@@ -18,15 +18,15 @@ export default class Roster {
         this._ID = data?.get("roster_id");
 
         const settings = data?.get("settings");
-        this._wins = Number(settings.get("wins"));
-        this._losses = Number(settings.get("losses"));
-        this._fptsFor = Number(`${settings.get("fpts")}.${settings.get("fpts_decimal")}`);
-        this._fptsAgainst = Number(`${settings.get("fpts_against")}.${settings.get("fpts_against_decimal")}`);
+        this._wins = Number(settings?.get("wins"));
+        this._losses = Number(settings?.get("losses"));
+        this._fptsFor = Number(`${settings?.get("fpts")}.${settings?.get("fpts_decimal")}`);
+        this._fptsAgainst = Number(`${settings?.get("fpts_against")}.${settings?.get("fpts_against_decimal")}`);
         
         const playersArray: string[] = data?.get("players");
         const players: TPlayers = playersData;
 
-        playersArray.forEach((playerId: string) => {
+        playersArray?.forEach((playerId: string) => {
             const player: TPlayer = players[playerId];
             this._players.push(new Player(player));
         });
