@@ -29,33 +29,8 @@ import Payouts from './features/Payouts';
 import CompareTeams from './features/CompareTeams';
 import History from './features/History';
 
-// Hooks & Web-Api
-import usePromise, {TApiResponse} from "../hooks/usePromise";
-import { League, NFLState, NFLStateAPI, RostersAPI, UsersAPI } from '../web-api';
-
-function useLeagueUsers(leagueId: string) {
-    return usePromise(() => {
-      if(!leagueId) return Promise.resolve(null);
-  
-      return UsersAPI.getByLeagueId(leagueId);
-    }, [leagueId]);
-}
-
-function useRosters(leagueId: string) {
-    return usePromise(() => {
-      if(!leagueId) return Promise.resolve(null);
-  
-      return RostersAPI.getByLeagueId(leagueId);
-    }, [leagueId]);
-}
-
-function useNFLState(sport: string = "nfl") {
-    return usePromise(() => {
-      if(!sport) return Promise.resolve(null);
-  
-      return NFLStateAPI.getBySport(sport);
-    }, [sport]);
-}
+// Web-Api
+import { League } from '../web-api';
 
 const drawerWidth: number = 300;
 const headerHeight: number = 64;
@@ -70,16 +45,12 @@ enum Navigation {
 };
 
 type TMain = {
+    league?: League | null;
     leagueError?: ReactElement<any, any> | null;
 }
 
-function Main({ leagueError = null }: TMain) {
+function Main({ league = null, leagueError = null }: TMain) {
   const [navigation, setNavigation] = useState<Navigation>(Navigation.NONE);
-
-  const [users, isLoadingUsers, usersError, retryUsers]: TApiResponse = useLeagueUsers(League.ID);
-  const [rosters, isLoadingRosters, rostersError, retryRosters]: TApiResponse = useRosters(League.ID);
-  const [nflStateResponse, isLoadingNFLState, nflStateError, retryNFLState]: TApiResponse = useNFLState(League.SPORT);
-  const nflState = new NFLState(nflStateResponse);
 
   return (
     <Box sx={{ display: 'flex', marginTop: `${headerHeight}px` }}>
@@ -149,38 +120,40 @@ function Main({ leagueError = null }: TMain) {
             </Drawer>
         </Box>
         <Box
+            aria-label="main-content"
             component="main"
             sx={{ flexGrow: 1, p: 3, width: { lg: `calc(100% - ${drawerWidth}px)` } }}
         >
+            {leagueError}
             {
                 navigation === Navigation.NONE &&
                 <>
-                    {leagueError}
-                    Main Content goes here
+                    Main Content goes here (Maybe League news, or something of that nature... Almost like a dashboard)
                 </>
             }
             {
                 navigation === Navigation.TEAM &&
-                <MyTeam />
+                <MyTeam league={league} />
             }
             {
                 navigation === Navigation.COMPARE &&
-                <CompareTeams users={users} rosters={rosters} />
+                <CompareTeams league={league} />
             }
             {
                 navigation === Navigation.PLAYERS &&
-                <Players />
+                <Players league={league} />
             }
             {
                 navigation === Navigation.PAYOUTS &&
-                <Payouts users={users} rosters={rosters} nflState={nflState} />
+                <Payouts league={league} />
             }
             {
                 navigation === Navigation.HISTORY &&
-                <History />
+                <History league={league} />
             }
         </Box>
         <Paper
+            aria-label="mobile-navigation"
             component="nav"
             sx={{
                 position: 'fixed',

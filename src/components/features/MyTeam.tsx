@@ -1,5 +1,7 @@
 import React from "react";
 
+import { League } from "../../web-api";
+
 // Material UI
 import {
     List,
@@ -8,7 +10,11 @@ import {
     Typography
 } from '@mui/material';
 
-function MyTeam() {
+type TMyTeam = {
+    league?: League | null;
+}
+
+function MyTeam({ league = null }: TMyTeam) {
     return (
         <>
             <Typography variant="h3" component="div">

@@ -1,5 +1,6 @@
 import React from "react";
-import { List as ImmutableList, Map } from "immutable";
+
+import { League } from "../../web-api";
 
 // Material UI
 import {
@@ -9,15 +10,11 @@ import {
     Typography
 } from '@mui/material';
 
-type TCompareTeams = {
-    users?: ImmutableList<Map<string, any>> | null;
-    rosters?: ImmutableList<Map<string, any>> | null;
+type TCompare = {
+    league?: League | null;
 }
 
-function CompareTeams({
-    users = null,
-    rosters = null
-}: TCompareTeams) {
+function CompareTeams({ league = null }: TCompare) {
     return (
         <>
             <Typography variant="h3" component="div">
