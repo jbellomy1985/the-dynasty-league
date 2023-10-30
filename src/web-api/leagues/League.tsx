@@ -1,21 +1,23 @@
-import { Map } from "immutable";
-
-enum Status {
-    in_season = "in_season"
-};
+import { List, Map } from "immutable";
+import User from "../users/User";
+import NFLState from "../nflState/NFLState";
 
 export default class League {
-    _leagueId: string;
+    static ID: string = "995785140678815744";
+    static SPORT: string = "nfl";
     _name: string;
     _season: number;
     _status: string;
-    _teams: number;
-    constructor(data: Map<string, any>) {
-        this._leagueId = data?.get("leagueId");
+    _numTeams: number;
+    _users: User[] | null;
+    _nflState: NFLState | null;
+    constructor(data: Map<string, any> | null, users: User[] | null, nflState: NFLState | null) {
         this._name = data?.get("name");
         this._season = data?.get("season");
         this._status = data?.get("status");
-        this._teams = data?.get("total_rosters");
+        this._numTeams = data?.get("total_rosters");
+        this._users = users;
+        this._nflState = nflState;
     }
 
     getName(): string {
@@ -31,6 +33,14 @@ export default class League {
     }
 
     getNumberOfTeams(): number {
-        return this._teams;
+        return this._numTeams;
+    }
+
+    getUsers(): User[] | null {
+        return this._users;
+    }
+
+    getNFLState(): NFLState | null {
+        return this._nflState;
     }
 }

@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useState} from "react";
+import {useCallback, useEffect, useMemo, useState} from "react";
 
 export type TApiResponse = Array<any>;
 
@@ -30,5 +30,7 @@ export default function usePromise(promise: Function, deps: Array<any>): TApiRes
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [...deps, retry]);
 
-    return [data, loading, error, retryPromise];
+    const response = useMemo(() => data, [data]);
+
+    return [response, loading, error, retryPromise];
 }
