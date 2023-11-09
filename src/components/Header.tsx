@@ -34,7 +34,7 @@ function Header({league = null, isLoading = false}: THeader) {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", lg: 'flex' }, marginLeft: "64px", justifyContent: "space-around"}}>
             <Typography variant="h4" noWrap>
-              Season: <span className="Header">{isLoading ? <Skeleton variant="text" sx={{ width: "79px"}} /> : league?.getSeason()}</span>
+              Season: <span className="Header">{isLoading ? <Skeleton variant="text" sx={{ width: "79px"}} /> : league?.getNFLState()?.getSeason()}</span>
             </Typography>
             <Typography variant="h4" sx={{marginLeft: "32px"}} noWrap>
               Status: <span className="Header">{isLoading ? <Skeleton variant="text" sx={{ width: "155px"}} /> : league?.getStatus()}</span>

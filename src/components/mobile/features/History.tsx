@@ -1,6 +1,6 @@
 import React from "react";
 
-import { League } from "../../web-api";
+import { League } from "../../../web-api";
 
 // Material UI
 import {
@@ -10,11 +10,11 @@ import {
     Typography
 } from '@mui/material';
 
-type TMyTeam = {
+type THistory = {
     league?: League | null;
 }
 
-function MyTeam({ league = null }: TMyTeam) {
+function History({ league = null }: THistory) {
     return (
         <>
             <Typography variant="h3" component="div">
@@ -22,17 +22,11 @@ function MyTeam({ league = null }: TMyTeam) {
             </Typography>
             <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
                 <ListItem>
-                    <ListItemText primary="Roster List" />
-                </ListItem>
-                <ListItem>
-                    <ListItemText primary="Average Age by position (Graph)" />
-                </ListItem>
-                <ListItem>
-                    <ListItemText primary="Average Points by position (Graph)" />
+                    <ListItemText primary="League History" secondary="Average Placement by User" />
                 </ListItem>
             </List>
         </>
     );
 };
 
-export default React.memo(MyTeam);
+export default React.memo(History);

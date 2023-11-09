@@ -1,6 +1,6 @@
 import React from "react";
 
-import { League } from "../../web-api";
+import { League } from "../../../web-api";
 
 // Material UI
 import {
@@ -10,11 +10,11 @@ import {
     Typography
 } from '@mui/material';
 
-type TPlayers = {
+type TCompare = {
     league?: League | null;
 }
 
-function Players({ league = null }: TPlayers) {
+function CompareTeams({ league = null }: TCompare) {
     return (
         <>
             <Typography variant="h3" component="div">
@@ -22,11 +22,14 @@ function Players({ league = null }: TPlayers) {
             </Typography>
             <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
                 <ListItem>
-                    <ListItemText primary="Player List with custom filters and data points (age, avg fpts / game, etc..." />
+                    <ListItemText primary="Average Age by position (Graph)" secondary="League Comparison" />
+                </ListItem>
+                <ListItem>
+                    <ListItemText primary="Average Points by position (Graph)" secondary="League Comparison" />
                 </ListItem>
             </List>
         </>
     );
 };
 
-export default React.memo(Players);
+export default React.memo(CompareTeams);

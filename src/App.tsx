@@ -1,8 +1,8 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { List, Map } from 'immutable';
 
 // Material UI
-import { Alert, AlertTitle, Button} from '@mui/material';
+import { Alert, AlertTitle, Box, Button} from '@mui/material';
 
 // Styles
 import './App.scss';
@@ -13,46 +13,39 @@ import '@fontsource/roboto/700.css';
 
 // Components
 import Header from './components/Header';
-import Main from './components/Main';
+import Main from './components/web/Main';
+import Mobile from './components/mobile/Mobile';
 
 // Hooks & Web-Api
 import {TApiResponse} from "./hooks/usePromise";
-import { useLeagueUsers, useNFLState, useRosters, useSleeperLeague } from './hooks';
-import { League, NFLState, Roster, User } from './web-api';
-
-function buildUsers(leagueUsers: List<Map<string, any>> | null, rosters: List<Map<string, any>>): User[] {
-  const users: User[] = [];
-
-  leagueUsers?.forEach(leagueUser => {
-    const rosterData: Map<string, any> | null = rosters?.find(roster => roster.get("owner_id") === leagueUser.get("user_id")) || null;
-    const roster = new Roster(rosterData);
-    const user = new User(leagueUser, roster);
-    users.push(user);
-  });
-
-  return users;
-}
+import { useLeagueUsers, useNFLState, useRosters, usePlayerStats, useSleeperLeague } from './hooks';
+import { League } from './web-api';
 
 function useDynastyLeague(): [League, boolean, Error, any] {
   const [sleeperLeague, isLoadingSleeperLeague, leagueError, retryLeague]: TApiResponse = useSleeperLeague(League.ID);
   const [leagueUsers, isLoadingUsers, usersError, retryUsers]: TApiResponse = useLeagueUsers(League.ID);
   const [rosters, isLoadingRosters, rostersError, retryRosters]: TApiResponse = useRosters(League.ID);
   const [nflStateResponse, isLoadingNFLState, nflStateError, retryNFLState]: TApiResponse = useNFLState(League.SPORT);
+  const [playerStats, isLoadingPlayerStats, playerStatsError, retryPlayerStats]: TApiResponse = usePlayerStats(nflStateResponse);
 
-  const isLoading = isLoadingSleeperLeague || isLoadingUsers || isLoadingRosters || isLoadingNFLState;
-  const error = leagueError || usersError || rostersError || nflStateError;
+  const isLoading = isLoadingSleeperLeague || isLoadingUsers || isLoadingRosters || isLoadingNFLState || isLoadingPlayerStats;
+  const error = leagueError || usersError || rostersError || nflStateError || playerStatsError;
 
   const retry = useCallback(() => {
     if(leagueError) retryLeague();
     if(usersError) retryUsers();
     if(rostersError) retryRosters();
     if(nflStateError) retryNFLState();
-  }, [retryLeague, retryUsers, retryRosters, retryNFLState]);
+    if(playerStatsError) retryPlayerStats();
+  }, [leagueError, retryLeague, usersError, retryUsers, rostersError, retryRosters, nflStateError, retryNFLState, playerStatsError, retryPlayerStats]);
 
-  const users: User[] = buildUsers(leagueUsers, rosters);
-  const nflState = new NFLState(nflStateResponse);
+  const league = useMemo(
+    () =>
+      new League(sleeperLeague, leagueUsers, rosters, nflStateResponse, playerStats),
+    [sleeperLeague, leagueUsers, rosters, nflStateResponse, playerStats]
+  );
 
-  return [new League(sleeperLeague, users, nflState), isLoading, error, retry];
+  return [league, isLoading, error, retry];
 }
 
 function App() {
@@ -61,22 +54,44 @@ function App() {
   return (
     <div className="App">
       <Header league={league} isLoading={isLoading} />
-      <Main
-        league={league}
-        leagueError={error &&
-          <Alert
-            severity="error"
-            action={
-              <Button color="inherit" size="small" onClick={retry}>
-                Retry
-              </Button>
-            }
-          >
-            <AlertTitle>We encourted an issue while loading the League. Please try again, or come back later.</AlertTitle>
-            {error.message}
-          </Alert>
-        }
-      />
+      <Box sx={{ display: {xs: "none", lg: "block"} }}>
+        <Main
+          league={league}
+          isLoading={isLoading}
+          leagueError={error &&
+            <Alert
+              severity="error"
+              action={
+                <Button color="inherit" size="small" onClick={retry}>
+                  Retry
+                </Button>
+              }
+            >
+              <AlertTitle>We encourted an issue while loading the League. Please try again, or come back later.</AlertTitle>
+              {error.message}
+            </Alert>
+          }
+        />
+      </Box>
+      <Box sx={{ display: {xs: "block", lg: "none"} }}>
+        <Mobile
+          league={league}
+          isLoading={isLoading}
+          leagueError={error &&
+            <Alert
+              severity="error"
+              action={
+                <Button color="inherit" size="small" onClick={retry}>
+                  Retry
+                </Button>
+              }
+            >
+              <AlertTitle>We encourted an issue while loading the League. Please try again, or come back later.</AlertTitle>
+              {error.message}
+            </Alert>
+          }
+        />
+      </Box>
     </div>
   );
 }

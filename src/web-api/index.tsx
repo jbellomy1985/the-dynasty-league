@@ -1,20 +1,22 @@
 // League
-import League from "./leagues/League";
-import LeaguesAPI from "./leagues/LeaguesAPI";
-import NFLState from "./nflState/NFLState";
-import NFLStateAPI from "./nflState/NFLStateAPI";
-import Roster from "./rosters/Roster";
-import RostersAPI from "./rosters/RostersAPI";
-import User from "./users/User";
-import UsersAPI from "./users/UsersAPI";
+export {default as League} from "./leagues/League";
+export {default as LeaguesAPI} from "./leagues/LeaguesAPI";
 
-export {
-    League,
-    LeaguesAPI,
-    NFLState,
-    NFLStateAPI,
-    Roster,
-    RostersAPI,
-    User,
-    UsersAPI
-};
+// NFL State
+export {default as NFLState} from "./nflState/NFLState";
+export {default as NFLStateAPI} from "./nflState/NFLStateAPI";
+
+// Player
+export {default as Player} from "./players/Player";
+
+// Roster
+export {default as Roster} from "./rosters/Roster";
+export {default as RostersAPI} from "./rosters/RostersAPI";
+
+// Stats
+export {default as Stats} from "./stats/Stats";
+export {default as StatsAPI} from "./stats/StatsAPI";
+
+// User
+export {default as User} from "./users/User";
+export {default as UsersAPI} from "./users/UsersAPI";
