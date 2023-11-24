@@ -1,5 +1,5 @@
 import { Map } from "immutable";
-import Roster from "../rosters/Roster";
+import Roster from "./Roster";
 
 export default class User {
     _teamName: string;

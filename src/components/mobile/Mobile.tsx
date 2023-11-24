@@ -13,12 +13,6 @@ import CompareArrowsOutlinedIcon from '@mui/icons-material/CompareArrowsOutlined
 import LocalAtmOutlinedIcon from '@mui/icons-material/LocalAtmOutlined';
 import HistoryOutlinedIcon from '@mui/icons-material/HistoryOutlined';
 
-// Components
-import MyTeam from './features/MyTeam';
-import Payouts from './features/Payouts';
-import CompareTeams from './features/CompareTeams';
-import History from './features/History';
-
 // Web-Api
 import { League } from '../../web-api';
 
@@ -48,29 +42,7 @@ function Main({ league = null, isLoading = false, leagueError = null }: TMain) {
             component="main"
             sx={{ flexGrow: 1, p: 3, marginBottom: 5 }}
         >
-            {leagueError}
-            {
-                navigation === Navigation.DASHBOARD &&
-                <>
-                    Main Content goes here (Maybe League news, or something of that nature... Almost like a dashboard)
-                </>
-            }
-            {
-                navigation === Navigation.TEAM &&
-                <MyTeam league={league} />
-            }
-            {
-                navigation === Navigation.COMPARE &&
-                <CompareTeams league={league} />
-            }
-            {
-                navigation === Navigation.PAYOUTS &&
-                <Payouts league={league} />
-            }
-            {
-                navigation === Navigation.HISTORY &&
-                <History league={league} />
-            }
+            Main Content goes here
         </Box>
         <Paper
             aria-label="mobile-navigation"

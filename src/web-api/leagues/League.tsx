@@ -1,7 +1,7 @@
 import { List, Map } from "immutable";
-import User from "../users/User";
+import User from "./User";
 import NFLState from "../nflState/NFLState";
-import Roster from "../rosters/Roster";
+import Roster from "./Roster";
 
 enum Status {
     OFF_SEASON = "Off Season",
