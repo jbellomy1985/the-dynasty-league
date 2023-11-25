@@ -14,7 +14,7 @@ export default class Roster {
     _fptsFor: number;
     _fptsAgainst: number;
     _players: Player[] = [];
-    constructor(data: Map<string, any> | undefined, stats: Record<number, any>, currentWeek: number) {
+    constructor(data: Map<string, any> | undefined, currentWeek: number) {
         this._ownerId = data?.get("owner_id");
         this._ID = data?.get("roster_id");
 
@@ -29,11 +29,7 @@ export default class Roster {
 
         playersArray.forEach((playerId: string) => {
             const player: TPlayer = players[playerId];
-            let playerStats: Record<number, Stats> = {};
-            for (let week: number = 1; week < currentWeek + 1; week++) {
-                playerStats[week] = new Stats(stats[week].get(playerId));
-            }
-            this._players.push(new Player(player, playerStats));
+            this._players.push(new Player(player));
         });
     }
 

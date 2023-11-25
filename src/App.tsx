@@ -1,5 +1,4 @@
 import React, { useCallback, useMemo } from 'react';
-import { List, Map } from 'immutable';
 
 // Material UI
 import { Alert, AlertTitle, Box, Button} from '@mui/material';
@@ -18,7 +17,7 @@ import Mobile from './components/mobile/Mobile';
 
 // Hooks & Web-Api
 import {TApiResponse} from "./hooks/usePromise";
-import { useLeagueUsers, useNFLState, useRosters, usePlayerStats, useSleeperLeague } from './hooks';
+import { useLeagueUsers, useNFLState, useRosters, useSleeperLeague } from './hooks';
 import { League } from './web-api';
 
 function useDynastyLeague(): [League, boolean, Error, any] {
@@ -26,23 +25,21 @@ function useDynastyLeague(): [League, boolean, Error, any] {
   const [leagueUsers, isLoadingUsers, usersError, retryUsers]: TApiResponse = useLeagueUsers(League.ID);
   const [rosters, isLoadingRosters, rostersError, retryRosters]: TApiResponse = useRosters(League.ID);
   const [nflStateResponse, isLoadingNFLState, nflStateError, retryNFLState]: TApiResponse = useNFLState(League.SPORT);
-  const [playerStats, isLoadingPlayerStats, playerStatsError, retryPlayerStats]: TApiResponse = usePlayerStats(nflStateResponse);
 
-  const isLoading = isLoadingSleeperLeague || isLoadingUsers || isLoadingRosters || isLoadingNFLState || isLoadingPlayerStats;
-  const error = leagueError || usersError || rostersError || nflStateError || playerStatsError;
+  const isLoading = isLoadingSleeperLeague || isLoadingUsers || isLoadingRosters || isLoadingNFLState;
+  const error = leagueError || usersError || rostersError || nflStateError;
 
   const retry = useCallback(() => {
     if(leagueError) retryLeague();
     if(usersError) retryUsers();
     if(rostersError) retryRosters();
     if(nflStateError) retryNFLState();
-    if(playerStatsError) retryPlayerStats();
-  }, [leagueError, retryLeague, usersError, retryUsers, rostersError, retryRosters, nflStateError, retryNFLState, playerStatsError, retryPlayerStats]);
+  }, [leagueError, retryLeague, usersError, retryUsers, rostersError, retryRosters, nflStateError, retryNFLState]);
 
   const league = useMemo(
     () =>
-      new League(sleeperLeague, leagueUsers, rosters, nflStateResponse, playerStats),
-    [sleeperLeague, leagueUsers, rosters, nflStateResponse, playerStats]
+      new League(sleeperLeague, leagueUsers, rosters, nflStateResponse),
+    [sleeperLeague, leagueUsers, rosters, nflStateResponse]
   );
 
   return [league, isLoading, error, retry];

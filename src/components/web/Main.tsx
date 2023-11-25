@@ -1,4 +1,4 @@
-import React, { useEffect, ReactElement, useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 
 // Material UI
 import {
@@ -13,6 +13,7 @@ import {
     Typography
 } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
+import GavelIcon from '@mui/icons-material/Gavel';
 import GroupsIcon from '@mui/icons-material/Groups';
 import CompareArrowsOutlinedIcon from '@mui/icons-material/CompareArrowsOutlined';
 import LocalAtmOutlinedIcon from '@mui/icons-material/LocalAtmOutlined';
@@ -21,6 +22,7 @@ import HistoryOutlinedIcon from '@mui/icons-material/HistoryOutlined';
 
 // Components
 import MyTeam from './features/MyTeam';
+import LeagueRules from "./features/LeagueRules/LeagueRules";
 import Payouts from './features/Payouts';
 import CompareTeams from './features/CompareTeams';
 import History from './features/History';
@@ -33,6 +35,7 @@ const headerHeight: number = 64;
 
 enum Navigation {
     DASHBOARD,
+    RULES,
     TEAM,
     COMPARE,
     PAYOUTS,
@@ -76,6 +79,11 @@ function Main({ league = null, isLoading = false, leagueError = null }: TMain) {
                                     <ListItemIcon><HomeIcon fontSize="large" /></ListItemIcon> <Typography variant='h5'>Dashboard</Typography>
                                 </ListItemButton>
                             </ListItem>
+                            <ListItem>
+                                <ListItemButton onClick={() => setNavigation(Navigation.RULES)} sx={{ padding: "16px", justifyContent: "center" }}>
+                                    <ListItemIcon><GavelIcon fontSize="large" /></ListItemIcon> <Typography variant='h5'>League Rules</Typography>
+                                </ListItemButton>
+                            </ListItem>
                             <Typography variant="h3" sx={{ padding: "8px 24px"}}>Roster</Typography>
                             <Divider />
                             <ListItem>
@@ -117,7 +125,7 @@ function Main({ league = null, isLoading = false, leagueError = null }: TMain) {
         <Box
             aria-label="main-content"
             component="main"
-            sx={{ flexGrow: 1, p: 3, width: `calc(100% - ${drawerWidth}px)` }}
+            sx={{ flexGrow: 1, p: 3 }}
         >
             {leagueError}
             {
@@ -125,6 +133,10 @@ function Main({ league = null, isLoading = false, leagueError = null }: TMain) {
                 <>
                     Main Content goes here (Maybe League news, or something of that nature... Almost like a dashboard)
                 </>
+            }
+            {
+                navigation === Navigation.RULES &&
+                <LeagueRules />
             }
             {
                 navigation === Navigation.TEAM &&

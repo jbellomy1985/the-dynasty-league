@@ -22,12 +22,12 @@ function getStatus(value: string): Status {
     }
 }
 
-function buildUsers(leagueUsers: List<Map<string, any>>, rosters: List<Map<string, any>>, playerStats: Record<number, any>, nflState: NFLState): User[] {
+function buildUsers(leagueUsers: List<Map<string, any>>, rosters: List<Map<string, any>>, nflState: NFLState): User[] {
     const users: User[] = [];
 
     leagueUsers.forEach(leagueUser => {
         const rosterData: Map<string, any> | undefined = rosters.find(roster => roster.get("owner_id") === leagueUser.get("user_id"));
-        const roster = new Roster(rosterData, playerStats, nflState.getCurrentWeek());
+        const roster = new Roster(rosterData, nflState.getCurrentWeek());
         const user = new User(leagueUser, roster);
         users.push(user);
     });
@@ -48,15 +48,14 @@ export default class League {
         league: Map<string, any> | null,
         users: List<Map<string, any>> | null,
         rosters: List<Map<string, any>> | null,
-        nflState: Map<string, any> | null,
-        playerStats: Record<number, any> | null
+        nflState: Map<string, any> | null
     ) {
         this._name = league?.get("name");
         this._status = getStatus(league?.get("status"));
         this._numTeams = league?.get("total_rosters");
         this._nflState = new NFLState(nflState);
-        if(users && rosters && playerStats) {
-            this._users = buildUsers(users, rosters, playerStats, this._nflState);
+        if(users && rosters) {
+            this._users = buildUsers(users, rosters, this._nflState);
         }
     }
 
