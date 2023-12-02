@@ -16,6 +16,7 @@
     "@types/node": "^16.18.59",
     "@types/react": "^18.2.31",
     "@types/react-dom": "^18.2.14",
+    "aws-amplify": "^6.0.5",
     "axios": "^1.5.1",
     "immutable": "^5.0.0-beta.4",
     "react": "^18.2.0",
