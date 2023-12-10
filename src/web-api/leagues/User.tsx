@@ -2,13 +2,15 @@ import { Map } from "immutable";
 import Roster from "./Roster";
 
 export default class User {
-    _teamName: string;
     _ID: string;
-    _roster: Roster | null;
-    constructor(data: Map<string, any> | null, roster: Roster | null) {
-        const metaData = data?.get("metadata");
-        this._teamName = metaData?.get("team_name") || data?.get("display_name");
-        this._ID = data?.get("user_id");
+    _teamName: string;
+    _avatarLink: string;
+    _roster: Roster;
+    constructor(data: Map<string, any>, roster: Roster) {
+        const metaData = data.get("metadata");
+        this._teamName = metaData.get("team_name") || data.get("display_name");
+        this._ID = data.get("user_id");
+        this._avatarLink = metaData.get("avatar") || `https://sleepercdn.com/avatars/thumbs/${data.get("avatar")}`;
         this._roster = roster;
     }
 
@@ -20,7 +22,11 @@ export default class User {
         return this._ID;
     }
 
-    getRoster(): Roster | null {
+    getAvatarLink(): string | null {
+        return this._avatarLink;
+    }
+
+    getRoster(): Roster {
         return this._roster;
     }
 }

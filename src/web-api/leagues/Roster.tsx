@@ -14,7 +14,7 @@ export default class Roster {
     _fptsFor: number;
     _fptsAgainst: number;
     _players: Player[] = [];
-    constructor(data: Map<string, any> | undefined, currentWeek: number) {
+    constructor(data: Map<string, any> | undefined) {
         this._ownerId = data?.get("owner_id");
         this._ID = data?.get("roster_id");
 
