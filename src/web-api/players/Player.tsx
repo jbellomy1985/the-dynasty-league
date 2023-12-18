@@ -1,4 +1,6 @@
-export type TPlayer = {
+import Stats from "../stats/Stats";
+
+export type PlayerType = {
     player_id: string;
     fantasy_positions: string[];
     full_name: string;
@@ -10,7 +12,7 @@ export default class Player {
     _positions: string[];
     _name: string;
     _age: number;
-    constructor(data: TPlayer) {
+    constructor(data: PlayerType) {
         this._ID = data.player_id;
         this._positions = data.fantasy_positions;
         this._name = data.full_name;
