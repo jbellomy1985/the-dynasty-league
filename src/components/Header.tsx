@@ -1,31 +1,64 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 
 // Material UI
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import Skeleton from '@mui/material/Skeleton';
-import Toolbar from '@mui/material/Toolbar';
-import Tooltip from '@mui/material/Tooltip';
-import Typography from '@mui/material/Typography';
-
-// Styles
-import './Header.scss';
+import {
+  AppBar,
+  Avatar,
+  Badge,
+  Box,
+  IconButton,
+  Skeleton,
+  Toolbar,
+  Tooltip,
+  Typography
+} from '@mui/material';
 
 // Web-Api
-import {League} from '../web-api';
+import { League, LoginAPI } from '../web-api';
 
-export type THeader = {
-  league?: League | null;
+// Components
+import HeaderMenu from './HeaderMenu';
+
+export type HeaderType = {
+  league: League;
   isLoading?: boolean;
+  onSigninClick?: Function | null;
 }
 
-function Header({league = null, isLoading = false}: THeader) {
+function Header({league, isLoading = false, onSigninClick = null }: HeaderType) {
+  const [error, setError] = useState<null | string>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const handleAvatarClick = useCallback((event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  }, []);
+
+  const handleMenuClose = useCallback(() => {
+    setAnchorEl(null);
+  }, []);
+
+  const handleSignIn = useCallback(() => {
+    handleMenuClose();
+    onSigninClick?.();
+  }, []);
+
+  const handleSignOut = useCallback(() => {
+    setError(null);
+    LoginAPI.handleSignOut()
+      .catch((error: any) => {
+          setError(error.message);
+      })
+}, []);
+
+  const open = Boolean(anchorEl);
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed">
         <Toolbar>
+          {
+            isLoading ? <Skeleton variant="circular" width={40} height={40} /> : <Avatar src={league.getAvatarThumbLink()} />
+          }
           <Typography variant="h4" component="div" sx={{ display: { sm: "block", md: "none" }, marginLeft: "8px" }}>
             {isLoading ? <Skeleton variant="text" sx={{ width: "188px"}} /> : league?.getName()}
           </Typography>
@@ -44,12 +77,21 @@ function Header({league = null, isLoading = false}: THeader) {
             </Typography>
           </Box>
           <Box sx={{ flexGrow: 0, position: "fixed", right: 16 }}>
-            <Tooltip title="User Name">
-              <IconButton sx={{ p: 0 }}>
-                <AccountCircle fontSize="large" />
+            <Tooltip title={error || "The Bench Warmers"}>
+              <IconButton
+                sx={{ p: 0 }}
+                aria-controls={open ? 'account-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? 'true' : undefined}
+                onClick={handleAvatarClick}
+              >
+                <Badge invisible={!error} badgeContent={1} color="error">
+                  <Avatar /*src="https://sleepercdn.com/uploads/e5eca7cd7020e9f441ae2b2cbd110c0a"*/ />
+                </Badge>
               </IconButton>
             </Tooltip>
           </Box>
+          <HeaderMenu anchorEl={anchorEl} onClose={handleMenuClose} onSigninClick={handleSignIn} onSignOutClick={handleSignOut} />
         </Toolbar>
       </AppBar>
     </Box>

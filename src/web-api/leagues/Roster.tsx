@@ -1,10 +1,10 @@
 import { Map } from "immutable";
-import Player, { TPlayer } from "../players/Player";
+import Player, { PlayerType } from "../players/Player";
 
 import playersData from "../players/data/players.json";
 import Stats from "../stats/Stats";
 
-type TPlayers = Record<string, any>;
+type PlayersType = Record<string, any>;
 
 export default class Roster {
     _ownerId: string;
@@ -25,10 +25,10 @@ export default class Roster {
         this._fptsAgainst = Number(`${settings.get("fpts_against")}.${settings.get("fpts_against_decimal")}`);
         
         const playersArray: string[] = data?.get("players");
-        const players: TPlayers = playersData;
+        const players: PlayersType = playersData;
 
         playersArray.forEach((playerId: string) => {
-            const player: TPlayer = players[playerId];
+            const player: PlayerType = players[playerId];
             this._players.push(new Player(player));
         });
     }

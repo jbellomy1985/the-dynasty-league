@@ -10,11 +10,11 @@ import {
     Typography
 } from '@mui/material';
 
-type THistory = {
+type HistoryType = {
     league?: League | null;
 }
 
-function History({ league = null }: THistory) {
+function History({ league = null }: HistoryType) {
     return (
         <>
             <Typography variant="h3" component="div">

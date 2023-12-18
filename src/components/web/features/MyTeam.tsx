@@ -10,11 +10,11 @@ import {
     Typography
 } from '@mui/material';
 
-type TMyTeam = {
+type MyTeamType = {
     league?: League | null;
 }
 
-function MyTeam({ league = null }: TMyTeam) {
+function MyTeam({ league = null }: MyTeamType) {
     return (
         <>
             <Typography variant="h3" component="div">

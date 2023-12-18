@@ -1,78 +1,33 @@
-import React, { useMemo } from "react";
-import {
-    Bar,
-    BarChart,
-    CartesianGrid,
-    Cell,
-    ResponsiveContainer,
-    Tooltip,
-    XAxis,
-    YAxis
-} from "recharts";
+import React from "react";
 
-import { League, Player, User } from "../../../web-api";
+import { League } from "../../../web-api";
 
 // Material UI
-import { Grid, Typography } from '@mui/material';
+import {
+    List,
+    ListItem,
+    ListItemText,
+    Typography
+} from '@mui/material';
 
-type TCompare = {
+type CompareTeamsType = {
     league?: League | null;
 }
 
-type TChartData = {
-    owner: string;
-    avgAge: string;
-    fill: string;
-}
-
-const userColor: string[] = ["#FF8B00", "#D1C100", "#6CFF00", "#0042FF", "#FF00F3", "#FF0000", "#000000", "#00FFEC", "#FF0068", "#6F6F6F"];
-
-function buildChartData(league: League | null): TChartData[] | undefined {
-    return league?.getUsers()?.map((user: User, index: number) => {
-        let avgAge: number = 0;
-        const players: Player[] | undefined = user.getRoster()?.getPlayers();
-        const numPLayers = players?.length || 1;
-
-        players?.forEach((player: Player) => { avgAge += player.getAge()});
-
-        return {
-            owner: user.getTeamName(),
-            avgAge: (avgAge / numPLayers).toFixed(2),
-            fill: userColor[index]
-        }
-    });
-}
-
-function CompareTeams({ league = null }: TCompare) {
-    const data: TChartData[] | undefined = useMemo(() => buildChartData(league), [league]);
-
+function CompareTeams({ league = null }: CompareTeamsType) {
     return (
         <>
-            <Typography variant="h3" component="div" gutterBottom>
-                Average Age Team
+            <Typography variant="h3" component="div">
+                Items to be added
             </Typography>
-            <Grid container spacing={2}>
-                <Grid item xs={12} lg={6}>
-                    <ResponsiveContainer width="100%" height={600}>
-                        <BarChart layout="vertical" data={data} margin={{ left: 50}}>
-                            <CartesianGrid />
-                            <XAxis type="number" />
-                            <YAxis dataKey="owner" type="category" />
-                            <Tooltip />
-                            <Bar dataKey="avgAge" barSize={40}>
-                                {
-                                    data?.map((entry: TChartData) => (
-                                        <Cell key={entry.owner} fill={entry.fill} />
-                                    ))
-                                }
-                            </Bar>
-                        </BarChart>
-                    </ResponsiveContainer>
-                </Grid>
-                <Grid item>
-                    
-                </Grid>
-            </Grid>
+            <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                <ListItem>
+                    <ListItemText primary="Average Age by position (Graph)" secondary="League Comparison" />
+                </ListItem>
+                <ListItem>
+                    <ListItemText primary="Average Points by position (Graph)" secondary="League Comparison" />
+                </ListItem>
+            </List>
         </>
     );
 };

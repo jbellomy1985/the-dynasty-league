@@ -1,8 +1,8 @@
 import {useCallback, useEffect, useMemo, useState} from "react";
 
-export type TApiResponse = Array<any>;
+export type ApiResponseType = Array<any>;
 
-export default function usePromise(promise: Function, deps: Array<any>): TApiResponse {
+export default function usePromise(promise: Function, deps: Array<any>): ApiResponseType {
     const [loading, setLoading] = useState<boolean>(false);
     const [data, setData] = useState<any | null>(null);
     const [error, setError] = useState<Error | null>(null);
