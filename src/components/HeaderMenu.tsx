@@ -15,11 +15,18 @@ import useUser from '../context/useUser';
 export type HeaderMenuType = {
     anchorEl?: null | HTMLElement;
     onClose?: null | Function;
+    onMyAccountClick?: null | Function;
     onSigninClick?: null | Function;
     onSignOutClick?: null | Function;
 }
 
-function HeaderMenu({ anchorEl = null, onClose = null, onSigninClick = null, onSignOutClick = null }: HeaderMenuType) {
+function HeaderMenu({
+    anchorEl = null,
+    onClose = null,
+    onMyAccountClick = null,
+    onSigninClick = null,
+    onSignOutClick = null
+}: HeaderMenuType) {
 
     const { user } = useUser();
 
@@ -70,7 +77,7 @@ function HeaderMenu({ anchorEl = null, onClose = null, onSigninClick = null, onS
             {
                 user.isSignedIn &&
                 <MenuList>
-                    <MenuItem>
+                    <MenuItem onClick={() => onMyAccountClick?.()}>
                         <Avatar /> My Account
                     </MenuItem>
                     <Divider />

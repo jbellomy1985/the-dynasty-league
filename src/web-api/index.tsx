@@ -1,5 +1,6 @@
 // Login
 export {default as LoginAPI} from "./login/LoginAPI";
+export {default as UserAPI} from "./login/UserAPI";
 
 // League
 export {default as League} from "./leagues/League";

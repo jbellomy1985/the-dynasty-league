@@ -11,6 +11,7 @@ import Payouts from './features/Payouts';
 import CompareTeams from './features/CompareTeams';
 import History from './features/History';
 import Login from '../login/Login';
+import MyAccount from '../login/MyAccount';
 
 // Utils
 import Navigation from '../../utils/Navigation';
@@ -53,6 +54,10 @@ function Main({ league, navigation, onNavigationChange, isLoading = false, leagu
                 {
                     navigation === Navigation.SIGNIN &&
                     <Login avatarLink={league.getAvatarLink()} />
+                }
+                {
+                    navigation === Navigation.ACCOUNT &&
+                    <MyAccount />
                 }
                 {
                     navigation === Navigation.DASHBOARD &&

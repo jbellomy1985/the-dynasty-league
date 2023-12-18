@@ -1,3 +1,7 @@
+// Dynasty League App
+export {default as useAuthUserAttributes} from "./useAuthUserAttributes";
+
+// Sleeper
 export {default as useLeagueUsers} from "./useLeagueUsers";
 export {default as useNFLState} from "./useNFLState";
 export {default as usePromise} from "./usePromise";

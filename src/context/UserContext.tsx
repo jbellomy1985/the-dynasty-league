@@ -2,7 +2,7 @@ import { createContext, useCallback, useEffect, useMemo, useState } from "react"
 import { AuthUser, cognitoUserPoolsTokenProvider } from "aws-amplify/auth/cognito";
 import { AuthTokens } from "aws-amplify/auth";
 
-import { LoginAPI } from "../web-api";
+import { LoginAPI, UserAPI } from "../web-api";
 
 type User = {
     isSignedIn: boolean;
@@ -30,7 +30,7 @@ export const UserContextProvider = ({ children }: { children: React.ReactNode })
 
     useEffect(() => {
         if(isAuthenticated) {
-            LoginAPI.getCurrentAuthenticatedUser().then((authUser: AuthUser) => {
+            UserAPI.getCurrentAuthenticatedUser().then((authUser: AuthUser) => {
                 setUser({
                     isSignedIn: true,
                     username: authUser.username

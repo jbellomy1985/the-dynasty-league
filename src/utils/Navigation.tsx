@@ -1,4 +1,5 @@
 enum Navigation {
+    ACCOUNT,
     SIGNIN,
     DASHBOARD,
     RULES,

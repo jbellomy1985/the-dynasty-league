@@ -22,10 +22,16 @@ import HeaderMenu from './HeaderMenu';
 export type HeaderType = {
   league: League;
   isLoading?: boolean;
-  onSigninClick?: Function | null;
+  onMyAccountClick?: null | Function;
+  onSigninClick?: null | Function;
 }
 
-function Header({league, isLoading = false, onSigninClick = null }: HeaderType) {
+function Header({
+  league,
+  isLoading = false,
+  onMyAccountClick = null,
+  onSigninClick = null
+}: HeaderType) {
   const [error, setError] = useState<null | string>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -43,6 +49,7 @@ function Header({league, isLoading = false, onSigninClick = null }: HeaderType) 
   }, []);
 
   const handleSignOut = useCallback(() => {
+    handleMenuClose();
     setError(null);
     LoginAPI.handleSignOut()
       .catch((error: any) => {
@@ -91,7 +98,13 @@ function Header({league, isLoading = false, onSigninClick = null }: HeaderType) 
               </IconButton>
             </Tooltip>
           </Box>
-          <HeaderMenu anchorEl={anchorEl} onClose={handleMenuClose} onSigninClick={handleSignIn} onSignOutClick={handleSignOut} />
+          <HeaderMenu
+            anchorEl={anchorEl}
+            onClose={handleMenuClose}
+            onMyAccountClick={onMyAccountClick}
+            onSigninClick={handleSignIn}
+            onSignOutClick={handleSignOut}
+          />
         </Toolbar>
       </AppBar>
     </Box>

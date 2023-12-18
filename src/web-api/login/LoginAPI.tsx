@@ -15,10 +15,6 @@ import {
 } from 'aws-amplify/auth';
 
 class LoginAPI {
-    getCurrentAuthenticatedUser() {
-        return getCurrentUser();
-    }
-
     getCurrentSession() {
         return fetchAuthSession()
     }

@@ -29,6 +29,7 @@ import useUser from './context/useUser';
 import {ApiResponseType} from "./hooks/usePromise";
 import { useLeagueUsers, useNFLState, useRosters, useSleeperLeague } from './hooks';
 import { League } from './web-api';
+import AmplifyConfigFactory, { AWSResponseType, VerificationMethod } from './config/AmplifyConfigFactory';
 
 const userPoolId: string | undefined = process.env.REACT_APP_USER_POOL_ID;
 const userPoolClientId: string | undefined = process.env.REACT_APP_USER_POOL_CLIENT_ID;
@@ -38,28 +39,16 @@ if(typeof userPoolId === 'undefined' || typeof userPoolClientId === 'undefined' 
   throw new Error("Something is not set up right. Please contact the admin to look into the issue");
 }
 
-Amplify.configure({
-  Auth: {
-      Cognito: {
-          userPoolId,
-          userPoolClientId,
-          signUpVerificationMethod: 'code',
-          loginWith: {
-              oauth: {
-                  domain: oauthDomain,
-                  scopes: [
-                    'openid',
-                    'email',
-                    'aws.cognito.signin.user.admin'
-                  ],
-                  redirectSignIn: ["https://jbellomy1985.github.io/the-dynasty-league"],
-                  redirectSignOut: ["https://jbellomy1985.github.io/the-dynasty-league"],
-                  responseType: 'code'
-              }
-          }
-      }
-  }
-});
+Amplify.configure(
+  AmplifyConfigFactory
+    .withUserPoolId(userPoolId)
+    .withUserPoolClientId(userPoolClientId)
+    .withSignUpVerificationMethod(VerificationMethod.code)
+    .withDomain(oauthDomain)
+    .withScopes(['openid', 'email', 'aws.cognito.signin.user.admin'])
+    .withResponseType(AWSResponseType.code)
+    .getConfig()
+);
 
 cognitoUserPoolsTokenProvider.setKeyValueStorage(new CookieStorage());
 
@@ -100,6 +89,10 @@ function App() {
     setNavigation(Navigation.SIGNIN);
   }, []);
 
+  const handleMyAccount = useCallback(() => {
+    setNavigation(Navigation.ACCOUNT);
+  }, []);
+
   const handleHideToast = useCallback(() => setToastMessage(null), []);
 
   useEffect(() => {
@@ -136,7 +129,12 @@ function App() {
               {toastMessage}
           </Alert>
       </Snackbar>
-      <Header league={league} isLoading={isLoading} onSigninClick={handleSignin} />
+      <Header
+        league={league}
+        isLoading={isLoading}
+        onMyAccountClick={handleMyAccount}
+        onSigninClick={handleSignin}
+      />
       <Box sx={{ display: {xs: "none", lg: "block"} }}>
         <Main
           league={league}
