@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/the-dynasty-league/static/css/main.0dd41547.css",
-    "main.js": "/the-dynasty-league/static/js/main.cdd20c0e.js",
+    "main.css": "/the-dynasty-league/static/css/main.23553ef1.css",
+    "main.js": "/the-dynasty-league/static/js/main.9ecf2075.js",
     "static/js/787.a551a1e2.chunk.js": "/the-dynasty-league/static/js/787.a551a1e2.chunk.js",
     "static/media/roboto-latin-500-normal.woff2": "/the-dynasty-league/static/media/roboto-latin-500-normal.f25d774ecfe0996f8eb5.woff2",
     "static/media/roboto-latin-700-normal.woff2": "/the-dynasty-league/static/media/roboto-latin-700-normal.227c93190fe7f82de3f8.woff2",
@@ -60,12 +60,12 @@
     "static/media/roboto-greek-ext-400-normal.woff": "/the-dynasty-league/static/media/roboto-greek-ext-400-normal.f708607d2a7290fb8bfa.woff",
     "static/media/roboto-greek-ext-700-normal.woff": "/the-dynasty-league/static/media/roboto-greek-ext-700-normal.249853776d22a271b2b5.woff",
     "index.html": "/the-dynasty-league/index.html",
-    "main.0dd41547.css.map": "/the-dynasty-league/static/css/main.0dd41547.css.map",
-    "main.cdd20c0e.js.map": "/the-dynasty-league/static/js/main.cdd20c0e.js.map",
+    "main.23553ef1.css.map": "/the-dynasty-league/static/css/main.23553ef1.css.map",
+    "main.9ecf2075.js.map": "/the-dynasty-league/static/js/main.9ecf2075.js.map",
     "787.a551a1e2.chunk.js.map": "/the-dynasty-league/static/js/787.a551a1e2.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.0dd41547.css",
-    "static/js/main.cdd20c0e.js"
+    "static/css/main.23553ef1.css",
+    "static/js/main.9ecf2075.js"
   ]
 }
