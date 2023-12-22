@@ -39,7 +39,7 @@ function MenuDrawer({ drawerWidth, headerHeight, onNavigationChange }: MenuDrawe
         if(user.isSignedIn) {
             onNavigationChange(Navigation.TEAM);
         }
-    }, []);
+    }, [user, onNavigationChange]);
 
     return (
         <Drawer

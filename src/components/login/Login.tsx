@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 
-import { Alert, Avatar, Box, Card, Grid, Snackbar } from "@mui/material";
+import { Avatar, Box, Card, Grid } from "@mui/material";
 
 // Components
 import LoginForm from "./LoginForm";
@@ -34,18 +34,11 @@ type LoginType = {
 }
 
 function Login({ avatarLink }: LoginType) {
-    const [toastMessage, setToastMessage] = useState<string | null>(null);
     const [resetPasswordUsername, setResetPasswordUsername] = useState<string | null>(null);
     const [loginStep, setLoginStep] = useState<LoginStep>(LoginStep.LOGIN);
 
     const handleNextStep = useCallback((nextStep: string) => {
         setLoginStep(getNextStep(nextStep));
-    }, []);
-
-    const handleHideToast = useCallback(() => setToastMessage(null), []);
-
-    const handleToastMessage = useCallback((message: string) => {
-        setToastMessage(message);
     }, []);
 
     const handleForgotPassword = useCallback(() => {
@@ -66,15 +59,6 @@ function Login({ avatarLink }: LoginType) {
 
     return (
         <Card sx={{ margin: "60px", display: "flex", justifyContent: "center", backgroundColor: "#e6e6e6" }}>
-            <Snackbar
-                open={Boolean(toastMessage)}
-                autoHideDuration={5000}
-                onClose={handleHideToast}
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}>
-                <Alert severity="success" sx={{width: "100%"}} onClose={handleHideToast}>
-                    {toastMessage}
-                </Alert>
-            </Snackbar>
             <Grid container justifyContent="center" alignItems="center">
                 <Grid item xs={12} md={6}>
                     <Box display="flex" justifyContent="center" alignItems="center" height="100%" padding="80px !important">
@@ -93,7 +77,6 @@ function Login({ avatarLink }: LoginType) {
                         loginStep === LoginStep.CONFIRM_SIGNIN &&
                         <ConfirmSignIn
                             onNextStep={handleNextStep}
-                            onToastMessage={handleToastMessage}
                         />
                     }
                     {
@@ -108,7 +91,6 @@ function Login({ avatarLink }: LoginType) {
                         loginStep === LoginStep.CONFIRM_RESET_PASSWORD &&
                         <ConfirmResetPassword
                             onPasswordReset={handlePasswordReset}
-                            onToastMessage={handleToastMessage}
                             usernameEntered={resetPasswordUsername}
                         />
                     }

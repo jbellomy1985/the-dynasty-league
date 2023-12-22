@@ -3,7 +3,7 @@ import { NFLState, StatsAPI } from "../web-api";
 import { Map } from "immutable";
 
 export default function usePlayerStats(nflStateReponse: Map<string, any> | null) {
-    return usePromise(async () => {
+    return usePromise<Record<number, any>>(async () => {
       if(!nflStateReponse) return Promise.resolve(null);
   
       const nflState = new NFLState(nflStateReponse)
@@ -13,6 +13,6 @@ export default function usePlayerStats(nflStateReponse: Map<string, any> | null)
         playerStats[week] = weeklyStats;
       }
 
-      return playerStats;
+      return Promise.resolve(playerStats);
     }, [nflStateReponse]);
 }

@@ -5,7 +5,7 @@ import { CookieStorage, Hub } from "aws-amplify/utils";
 import { cognitoUserPoolsTokenProvider } from "aws-amplify/auth/cognito";
 
 // Material UI
-import { Alert, AlertTitle, Box, Button, Snackbar} from '@mui/material';
+import { Alert, AlertTitle, Box, Button} from '@mui/material';
 
 // Styles
 import './App.scss';
@@ -26,10 +26,11 @@ import Navigation from './utils/Navigation';
 import useUser from './context/useUser';
 
 // Hooks & Web-Api
-import {ApiResponseType} from "./hooks/usePromise";
 import { useLeagueUsers, useNFLState, useRosters, useSleeperLeague } from './hooks';
 import { League } from './web-api';
 import AmplifyConfigFactory, { AWSResponseType, VerificationMethod } from './config/AmplifyConfigFactory';
+import useSnackbar from './context/useSnackbar';
+import { Severity } from './context/SnackbarContext';
 
 const userPoolId: string | undefined = process.env.REACT_APP_USER_POOL_ID;
 const userPoolClientId: string | undefined = process.env.REACT_APP_USER_POOL_CLIENT_ID;
@@ -52,11 +53,11 @@ Amplify.configure(
 
 cognitoUserPoolsTokenProvider.setKeyValueStorage(new CookieStorage());
 
-function useDynastyLeague(): [League, boolean, Error, any] {
-  const [sleeperLeague, isLoadingSleeperLeague, leagueError, retryLeague]: ApiResponseType = useSleeperLeague(League.ID);
-  const [leagueUsers, isLoadingUsers, usersError, retryUsers]: ApiResponseType = useLeagueUsers(League.ID);
-  const [rosters, isLoadingRosters, rostersError, retryRosters]: ApiResponseType = useRosters(League.ID);
-  const [nflStateResponse, isLoadingNFLState, nflStateError, retryNFLState]: ApiResponseType = useNFLState(League.SPORT);
+function useDynastyLeague(): [League, boolean, Error | null, any] {
+  const [sleeperLeague, isLoadingSleeperLeague, leagueError, retryLeague] = useSleeperLeague(League.ID);
+  const [leagueUsers, isLoadingUsers, usersError, retryUsers] = useLeagueUsers(League.ID);
+  const [rosters, isLoadingRosters, rostersError, retryRosters] = useRosters(League.ID);
+  const [nflStateResponse, isLoadingNFLState, nflStateError, retryNFLState] = useNFLState(League.SPORT);
 
   const isLoading = isLoadingSleeperLeague || isLoadingUsers || isLoadingRosters || isLoadingNFLState;
   const error = leagueError || usersError || rostersError || nflStateError;
@@ -78,12 +79,12 @@ function useDynastyLeague(): [League, boolean, Error, any] {
 }
 
 function App() {
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [navigation, setNavigation] = useState<Navigation>(Navigation.DASHBOARD);
 
   const { checkIdToken } = useUser();
+  const { createToast } = useSnackbar();
 
-  const [league, isLoading, error, retry]: [League, boolean, Error, any] = useDynastyLeague();
+  const [league, isLoading, error, retry]: [League, boolean, Error | null, any] = useDynastyLeague();
 
   const handleSignin = useCallback(() => {
     setNavigation(Navigation.SIGNIN);
@@ -93,19 +94,17 @@ function App() {
     setNavigation(Navigation.ACCOUNT);
   }, []);
 
-  const handleHideToast = useCallback(() => setToastMessage(null), []);
-
   useEffect(() => {
     checkIdToken();
     const hubListenerCancelToken = Hub.listen('auth', ({ payload: { event } }) => {
       checkIdToken();
       switch (event) {
         case 'signedIn':
-          setToastMessage("Sucessfully signed in!");
+          createToast("Sucessfully signed in!", Severity.SUCCESS);
           setNavigation(Navigation.DASHBOARD);
           break;
         case 'signedOut':
-          setToastMessage("Successfully logged out!");
+          createToast("Successfully logged out!", Severity.SUCCESS);
           if(navigation === Navigation.TEAM) setNavigation(Navigation.DASHBOARD);
           break;
       }
@@ -120,15 +119,6 @@ function App() {
 
   return (
     <div className="App">
-      <Snackbar
-          open={Boolean(toastMessage)}
-          autoHideDuration={5000}
-          onClose={handleHideToast}
-          anchorOrigin={{ vertical: "top", horizontal: "right" }}>
-          <Alert severity="success" sx={{width: "100%"}} onClose={handleHideToast}>
-              {toastMessage}
-          </Alert>
-      </Snackbar>
       <Header
         league={league}
         isLoading={isLoading}

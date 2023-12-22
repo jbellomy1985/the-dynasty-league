@@ -19,15 +19,15 @@ import {
 import PasswordValidation, { PasswordValidationType } from "./PasswordValidation";
 import PasswordRules from "./PasswordRules";
 import { LoginAPI } from "../../web-api";
+import useSnackbar from "../../context/useSnackbar";
+import { Severity } from "../../context/SnackbarContext";
 
 type ConfirmSignInType = {
-    onNextStep?: Function | null;
-    onToastMessage?: Function | null;
+    onNextStep?: Function | null
 }
 
 function ConfirmSignIn({
-    onNextStep = null,
-    onToastMessage = null
+    onNextStep = null
 }: ConfirmSignInType) {
     const [isConfirming, setIsConfirming] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
@@ -38,6 +38,8 @@ function ConfirmSignIn({
     // confirm password
     const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
     const [confirmPassword, setConfirmPassword] = useState<string>("");
+
+    const { createToast } = useSnackbar();
 
     useEffect(() => {
         setValidations(PasswordValidation.validate(newPassword));
@@ -65,7 +67,7 @@ function ConfirmSignIn({
         setIsConfirming(true);
         LoginAPI.handleConfirmSignIn({ challengeResponse: newPassword })
             .then((output: ConfirmSignInOutput) => {
-                onToastMessage?.("Successfully updated password!");
+                createToast("Successfully updated password!", Severity.SUCCESS);
                 const { nextStep: { signInStep} } = output;
                 if(signInStep) {
                     onNextStep?.(signInStep);

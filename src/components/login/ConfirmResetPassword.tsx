@@ -19,16 +19,16 @@ import {
 import PasswordValidation, { PasswordValidationType } from "./PasswordValidation";
 import PasswordRules from "./PasswordRules";
 import { LoginAPI } from "../../web-api";
+import useSnackbar from "../../context/useSnackbar";
+import { Severity } from "../../context/SnackbarContext";
 
 type ConfirmResetPasswordType = {
     onPasswordReset?: Function | null;
-    onToastMessage?: Function | null;
     usernameEntered?: string | null;
 }
 
 function ConfirmResetPassword({
     onPasswordReset = null,
-    onToastMessage = null,
     usernameEntered = null
 }: ConfirmResetPasswordType) {
     const [isReseting, setIsReseting] = useState<boolean>(false);
@@ -45,7 +45,7 @@ function ConfirmResetPassword({
     const [newPassword, setNewPassword] = useState<string>("");
     const [validations, setValidations] = useState<PasswordValidationType>(PasswordValidation.defaultValidations);
 
-    // const { user } = useUser();
+    const { createToast } = useSnackbar();
 
     useEffect(() => {
         setValidations(PasswordValidation.validate(newPassword));
@@ -76,7 +76,7 @@ function ConfirmResetPassword({
         setIsReseting(true);
         LoginAPI.handleConfirmResetPassword({ username: (usernameEntered || username), confirmationCode: confirmCode, newPassword })
             .then(() => {
-                onToastMessage?.("Successfully updated password!");
+                createToast("Successfully updated password!", Severity.SUCCESS);
                 onPasswordReset?.();
             })
             .catch((error: any) => {
