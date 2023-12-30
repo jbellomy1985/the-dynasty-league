@@ -1,45 +1,63 @@
 import { createContext, useCallback, useEffect, useMemo, useState } from "react";
-import { AuthUser, cognitoUserPoolsTokenProvider } from "aws-amplify/auth/cognito";
+import { AuthUser, FetchUserAttributesOutput, cognitoUserPoolsTokenProvider } from "aws-amplify/auth/cognito";
 import { AuthTokens } from "aws-amplify/auth";
 
 import { LoginAPI, UserAPI } from "../web-api";
 
-type User = {
+export type AccountUser = {
     isSignedIn: boolean;
     username: string | null;
+    userAttributes: FetchUserAttributesOutput;
 }
 
 const defaultUser = {
     isSignedIn: false,
-    username: null
+    username: null,
+    userAttributes: {}
 }
 
 export type UserContextType = {
-    user: User;
+    user: AccountUser;
     checkIdToken: Function;
+    refetchUser: Function;
 }
 
 export const UserContext = createContext<UserContextType>({
     user: defaultUser,
-    checkIdToken: () => {}
+    checkIdToken: () => {},
+    refetchUser: () => {}
 });
 
+type AuthenticatedUserType = {
+    authUser: AuthUser;
+    userAttributes: FetchUserAttributesOutput;
+}
+
 export const UserContextProvider = ({ children }: { children: React.ReactNode }) => {
+    const [refetchUser, setRefetchUser] = useState<Symbol | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-    const [user, setUser] = useState<User>(defaultUser);
+    const [user, setUser] = useState<AccountUser>(defaultUser);
 
     useEffect(() => {
         if(isAuthenticated) {
-            UserAPI.getCurrentAuthenticatedUser().then((authUser: AuthUser) => {
+            UserAPI.getCurrentAuthenticatedUser().then(({authUser, userAttributes}: AuthenticatedUserType) => {
                 setUser({
                     isSignedIn: true,
-                    username: authUser.username
+                    username: authUser.username,
+                    userAttributes
                 });
+            }).catch((error: any) => {
+                console.log("Unable to get an authenticated user. Please try again later.", error);
+                setUser(defaultUser);
             });
         } else {
             setUser(defaultUser);
         }
-    }, [isAuthenticated]);
+    }, [isAuthenticated, refetchUser]);
+
+    const handleRefretchUser = useCallback(() => {
+        setRefetchUser(Symbol("Refetching User"));
+    }, []);
 
     const checkIdToken = useCallback(() => {
         cognitoUserPoolsTokenProvider.getTokens().then((authTokens: AuthTokens | null) => {
@@ -58,12 +76,13 @@ export const UserContextProvider = ({ children }: { children: React.ReactNode })
 
             setIsAuthenticated(true);
         });
-    }, [cognitoUserPoolsTokenProvider]);
+    }, []);
 
     const value = useMemo(() => ({
         user,
-        checkIdToken
-    }), [user]);
+        checkIdToken,
+        refetchUser: handleRefretchUser
+    }), [user, checkIdToken]);
 
     return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 }

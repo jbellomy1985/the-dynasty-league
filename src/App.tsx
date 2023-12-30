@@ -115,6 +115,7 @@ function App() {
     return () => {
       window.removeEventListener('beforeunload', hubListenerCancelToken);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

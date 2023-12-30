@@ -56,7 +56,7 @@ function Main({ league, navigation, onNavigationChange, isLoading = false, leagu
                     <Login avatarLink={league.getAvatarLink()} />
                 }
                 {
-                    navigation === Navigation.ACCOUNT &&
+                    navigation === Navigation.ACCOUNT && user.isSignedIn &&
                     <MyAccount />
                 }
                 {

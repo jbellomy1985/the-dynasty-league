@@ -1,12 +1,18 @@
-import { fetchUserAttributes, getCurrentUser } from "aws-amplify/auth";
+import { AuthUser, fetchUserAttributes, getCurrentUser, updateUserAttributes } from "aws-amplify/auth";
 
 class UserAPI {
     getCurrentAuthenticatedUser() {
-        return getCurrentUser();
+        return getCurrentUser().then(async (authUser: AuthUser) => {
+            const userAttributes = await fetchUserAttributes();
+            return {
+                authUser,
+                userAttributes
+            }
+        });
     }
 
-    getAuthenticatedUserAtrributes() {
-        return fetchUserAttributes();
+    updateUserAttributes(userAttributes: Record<string, any>) {
+        return updateUserAttributes({ userAttributes });
     }
 }
 
